@@ -1,6 +1,8 @@
 package br.edu.ifb.java_web_dev.controller;
 
 import br.edu.ifb.java_web_dev.model.CalculatorService;
+import br.edu.ifb.java_web_dev.model.Resultado;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,51 +12,31 @@ public class CalculatorRestController {
 
     private final CalculatorService calculatorService = new CalculatorService();
 
-    // Métodos GET
-    @GetMapping("/sum")
-    public int sum(@RequestParam int a, @RequestParam int b) {
-        return calculatorService.sum(a, b);
+    @GetMapping(value = "/sum/{a}/{b}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Resultado sum(@PathVariable int a, @PathVariable int b) {
+        int result = calculatorService.sum(a, b);
+        return new Resultado("Sucesso", result);
     }
 
-    @GetMapping("/sub")
-    public int sub(@RequestParam int a, @RequestParam int b) {
-        return calculatorService.sub(a, b);
+    @GetMapping(value = "/sub/{a}/{b}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Resultado sub(@PathVariable int a, @PathVariable int b) {
+        int result = calculatorService.sub(a, b);
+        return new Resultado("Sucesso", result);
     }
 
-    @GetMapping("/mul")
-    public int mul(@RequestParam int a, @RequestParam int b) {
-        return calculatorService.mul(a, b);
+    @GetMapping(value = "/mul/{a}/{b}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Resultado mul(@PathVariable int a, @PathVariable int b) {
+        int result = calculatorService.mul(a, b);
+        return new Resultado("Sucesso", result);
     }
 
-    @GetMapping("/div")
-    public double div(@RequestParam int a, @RequestParam int b) {
-        return calculatorService.div(a, b);
-    }
-
-    // Métodos POST
-    @PostMapping("/sum")
-    public int sumPost(@RequestBody Operands operands) {
-        return calculatorService.sum(operands.a, operands.b);
-    }
-
-    @PostMapping("/sub")
-    public int subPost(@RequestBody Operands operands) {
-        return calculatorService.sub(operands.a, operands.b);
-    }
-
-    @PostMapping("/mul")
-    public int mulPost(@RequestBody Operands operands) {
-        return calculatorService.mul(operands.a, operands.b);
-    }
-
-    @PostMapping("/div")
-    public double divPost(@RequestBody Operands operands) {
-        return calculatorService.div(operands.a, operands.b);
-    }
-
-    // Classe auxiliar para POST
-    public static class Operands {
-        public int a;
-        public int b;
+    @GetMapping(value = "/div/{a}/{b}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Resultado div(@PathVariable int a, @PathVariable int b) {
+        try {
+            double result = calculatorService.div(a, b);
+            return new Resultado("Sucesso", result);
+        } catch (IllegalArgumentException e) {
+            return new Resultado(e.getMessage(), 0);
+        }
     }
 }
